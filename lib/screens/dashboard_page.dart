@@ -2,6 +2,7 @@ import 'package:cric_scoring/components/widgets/circular_ball.dart';
 import 'package:cric_scoring/components/widgets/create_text.dart';
 import 'package:cric_scoring/components/widgets/header_part.dart';
 import 'package:cric_scoring/components/widgets/raised_button.dart';
+import 'package:cric_scoring/components/widgets/snakbar.dart';
 import 'package:cric_scoring/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,12 +19,25 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
   String _batsman1Total = "10 on 17 balls"; //getBatsman1Total()
   String _batsman2Total = "32 on 48 balls"; //getBatsman2Total()
   String _currentScore = "42/0"; //getCurrentScore()
-  String _currentOvers = "7.3"; //getCurrentOvers()
+  String _currentOvers = "7.3";
+  String _totalOvers = "7.3"; //getCurrentOvers()
   String _currentRR = "6.1"; //getCurrentRunRate()
-  String facingBatsmanName = "Ahmad";
+  String facingBatsmanName = "";
+  String selectedBatsman = "";
 
-  StepState() {
-    String facingBatsmanName = "Ahmad";
+  @override
+  void initState() {
+    selectedBatsman = _batsman1Name;
+    facingBatsmanName = selectedBatsman;
+    debugPrint(facingBatsmanName);
+  }
+
+  List<DropdownMenuItem<String>> get facingBatsmanItems {
+    List<DropdownMenuItem<String>> menuItems = [
+      DropdownMenuItem(child: Text(_batsman1Name), value: _batsman1Name),
+      DropdownMenuItem(child: Text(_batsman2Name), value: _batsman2Name),
+    ];
+    return menuItems;
   }
 
   /**
@@ -358,7 +372,24 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
                           txt_weight: FontWeight.w500,
                           txt_color: black_color,
                         ),
-                        Create_Text(text: "box")
+                        Container(
+                          height: _height * 0.06,
+                          child: DropdownButton(
+                            dropdownColor: primary_color,
+                            style: const TextStyle(
+                              color: black_color,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            value: selectedBatsman,
+                            items: facingBatsmanItems,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedBatsman = newValue!;
+                                facingBatsmanName = selectedBatsman;
+                              });
+                            },
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -516,7 +547,7 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
                   ),
                   Create_Text(
                     text: _currentScore,
-                    txt_color: Colors.black.withOpacity(0.4),
+                    txt_color: Colors.black,
                     txt_size: 15,
                     txt_weight: FontWeight.w500,
                   )
@@ -532,7 +563,7 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
                     txt_color: background_color,
                   ),
                   Create_Text(
-                    text: _currentOvers,
+                    text: _currentOvers + " / " + _totalOvers,
                     txt_color: Colors.black.withOpacity(0.8),
                     txt_size: 15,
                     txt_weight: FontWeight.w500,
