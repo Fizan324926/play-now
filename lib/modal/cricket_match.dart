@@ -5,7 +5,7 @@ class CricketMatch {
   String name = "";
   int _noOfOvers = 0;
   int noOfPlayers = 0;
-  List<Team> teams = [Team(), Team()];
+  List<Team> teams = [Team("team 1"), Team("team 2")];
   List<Over> overs = [];
 
   int get noOfOvers => _noOfOvers;
