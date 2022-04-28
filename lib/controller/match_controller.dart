@@ -1,7 +1,4 @@
 import 'package:cric_scoring/modal/ball_record.dart';
-import 'package:cric_scoring/modal/cricket_match.dart';
-import 'package:cric_scoring/modal/out_type.dart';
-import 'package:cric_scoring/modal/wicket.dart';
 
 class MatchController {
   int? noOfOvers;

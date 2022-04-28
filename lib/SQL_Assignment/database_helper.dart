@@ -35,9 +35,9 @@ class DatabaseHelper {
     String path = directory.path + 'cricket.db';
 
     // Open/create the database at a given path
-    var notesDatabase =
+    var cricketDatabase =
         await openDatabase(path, version: 1, onCreate: _createDb);
-    return notesDatabase;
+    return cricketDatabase;
   }
 
   void _createDb(Database db, int newVersion) async {
@@ -46,18 +46,54 @@ class DatabaseHelper {
         '$colOverNo INTEGER, $colScore INTEGER, $colBowler TEXT, $colBatsman TEXT)');
   }
 
-  Future<List<Map<String, dynamic>>> getNoteMapList() async {
+  Future<List<Map<String, dynamic>>> getBallRecordMapList() async {
     Database db = await database;
 
     var result = await db.query(cricketTable, orderBy: '$colOverNo ASC');
     return result;
   }
 
-  // Insert Operation: Insert a Note object to database
-  Future<int> insertNote(BallRecord ballRecord) async {
+  Future<int> insertBallRecord(BallRecord ballRecord) async {
     Database db = await database;
     var result = await db.insert(cricketTable, ballRecord.toMap());
     return result;
+  }
+
+  Future<int> updateBallRecord(BallRecord ball) async {
+    var db = await database;
+    var result = await db.update(cricketTable, ball.toMap(),
+        where: '$colId = ?', whereArgs: [ball.id]);
+    return result;
+  }
+
+  Future<int> deleteBallRecord(int id) async {
+    var db = await database;
+    int result =
+        await db.rawDelete('DELETE FROM $cricketTable WHERE $colId = $id');
+    return result;
+  }
+
+  Future<int> getCount() async {
+    Database db = await database;
+    List<Map<String, dynamic>> x =
+        await db.rawQuery('SELECT COUNT (*) from $cricketTable');
+    int result = Sqflite.firstIntValue(x)!;
+    return result;
+  }
+
+  Future<List<BallRecord>> getNoteList() async {
+    var ballRecordMapList =
+        await getBallRecordMapList(); // Get 'Map List' from database
+    int count =
+        ballRecordMapList.length; // Count the number of map entries in db table
+
+    List<BallRecord> ballRecordList = [];
+    // For loop to create a 'Note List' from a 'Map List'
+    for (int i = 0; i < count; i++) {
+      ballRecordList.add(BallRecord.fromMapObject(ballRecordMapList[i]));
+    }
+
+    return ballRecordList;
   }
 }
 

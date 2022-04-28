@@ -19,11 +19,11 @@
 
 class BallRecord {
   int? id;
-  int ballno;
-  int score;
-  int overno;
-  String bowler;
-  String batsman;
+  int ballno = 0;
+  int score = 0;
+  int overno = 0;
+  String bowler = "";
+  String batsman = "";
   BallRecord(
       {required this.ballno,
       required this.score,
@@ -41,5 +41,14 @@ class BallRecord {
     map['batsman'] = batsman;
 
     return map;
+  }
+
+  BallRecord.fromMapObject(Map<String, dynamic> map) {
+    id = map['id'];
+    ballno = map['ballno'];
+    overno = map['overno'];
+    score = map['score'];
+    bowler = map['bowler'];
+    batsman = map['batsman'];
   }
 }
