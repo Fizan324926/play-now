@@ -20,13 +20,7 @@ class _MainHomeState extends State<MainHome> {
   List<Widget> _widgetOptions = [];
   @override
   void initState() {
-    _widgetOptions = <Widget>[
-      DashBoard(
-        match: widget.match,
-      ),
-      History(),
-      Stats()
-    ];
+    _widgetOptions = <Widget>[DashBoard(), History(), Stats()];
     super.initState();
   }
 
@@ -76,11 +70,9 @@ class _MainHomeState extends State<MainHome> {
 }
 
 class DashBoard extends StatefulWidget {
-  final CricketMatch match;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-
-  const DashBoard({Key? key, required this.match}) : super(key: key);
+  const DashBoard({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<DashBoard> createState() => _DashBoardState();

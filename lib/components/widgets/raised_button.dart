@@ -5,38 +5,29 @@ import 'package:flutter/material.dart';
 class Raised_Button extends StatefulWidget {
   final String text;
   final double? height, width;
+  final VoidCallback? onPressed;
   const Raised_Button(
-      {Key? key, required this.text, this.height, this.width, onPressed})
+      {Key? key, required this.text, this.height, this.width, this.onPressed})
       : super(key: key);
+
   @override
-  State<Raised_Button> createState() => _Reised_ButtonState(
-        text,
-        height,
-        width,
-      );
+  State<Raised_Button> createState() => _Raised_ButtonState();
 }
 
-class _Reised_ButtonState extends State<Raised_Button> {
-  final String text;
-  final double? height, width;
-  _Reised_ButtonState(
-    @required this.text,
-    this.height,
-    this.width,
-  );
+class _Raised_ButtonState extends State<Raised_Button> {
   @override
   Widget build(BuildContext context) {
     return ButtonTheme(
-      height: this.height ?? 50,
-      minWidth: this.width ?? 50,
+      height: widget.height ?? 50,
+      minWidth: widget.width ?? 50,
       child: RaisedButton(
-        onPressed: () {},
+        onPressed: widget.onPressed ?? () {},
         color: background_color,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
             side: BorderSide(color: primary_color)),
         child: Create_Text(
-          text: text,
+          text: widget.text,
           txt_color: primary_color,
           txt_size: 20,
           txt_weight: FontWeight.w900,

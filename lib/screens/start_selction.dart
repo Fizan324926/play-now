@@ -1,8 +1,13 @@
+// ignore_for_file: unnecessary_new
+
 import 'dart:html';
 
+import 'package:cric_scoring/components/widgets/create_text.dart';
+import 'package:cric_scoring/components/widgets/header_part.dart';
 import 'package:cric_scoring/constants.dart';
 import 'package:cric_scoring/modal/cricket_match.dart';
 import 'package:cric_scoring/screens/dashboard.dart';
+import 'package:cric_scoring/screens/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cric_scoring/screens/home_screen.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +20,89 @@ class Selection extends StatefulWidget {
 class _SelectionState extends State<Selection> {
   TextEditingController players = TextEditingController();
   TextEditingController overs = TextEditingController();
+  TextEditingController facingBatsman =
+      TextEditingController(text: "Batsman 1");
+  TextEditingController runingBatsman =
+      TextEditingController(text: "Batsman 2");
+  TextEditingController bowler = TextEditingController(text: "Bowler 1");
+
+  _NamesDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Create_Text(text: "One More Step!"),
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextField(
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  cursorColor: primary_color,
+                  controller: facingBatsman,
+                  style: TextStyle(color: Colors.black),
+                  cursorHeight: 30,
+                  decoration: const InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: primary_color),
+                      ),
+                      border: OutlineInputBorder(),
+                      labelText: 'Name of facing Batsman',
+                      labelStyle: TextStyle(color: primary_color)),
+                ),
+                TextField(
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  cursorColor: primary_color,
+                  controller: runingBatsman,
+                  style: TextStyle(color: Colors.black),
+                  cursorHeight: 30,
+                  decoration: const InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: primary_color),
+                      ),
+                      border: OutlineInputBorder(),
+                      labelText: 'Name of Runing Batsman',
+                      labelStyle: TextStyle(color: primary_color)),
+                ),
+                TextField(
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  cursorColor: primary_color,
+                  controller: bowler,
+                  style: TextStyle(color: Colors.black),
+                  cursorHeight: 30,
+                  decoration: const InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: primary_color),
+                      ),
+                      border: OutlineInputBorder(),
+                      labelText: 'Name of Bowler',
+                      labelStyle: TextStyle(color: primary_color)),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              // ignore: unnecessary_new
+              new FlatButton(
+                child: new Create_Text(text: "Done"),
+                onPressed: () {
+                  if (facingBatsman.text.isNotEmpty &&
+                      runingBatsman.text.isNotEmpty &&
+                      bowler.text.isNotEmpty) {
+                    Navigator.of(context).pop();
+                  } else {
+                    showAlertDialog(context);
+                  }
+                },
+              )
+            ],
+          );
+        });
+  }
 
   CricketMatch getMatch() {
     int over = int.parse(overs.text);
@@ -31,11 +119,12 @@ class _SelectionState extends State<Selection> {
     double height = MediaQuery.of(context).size.height;
     double container_height = height * 0.2;
     return Scaffold(
-      appBar: Buildappbar(height),
+      //appBar: Buildappbar(height),
       body: Container(
           child: Column(
         children: [
-          Buildupperpart(container_height, height, width, context),
+          Header_Part(textMain: "Home", totalHeight: 0.1),
+          //Buildupperpart(container_height, height, width, context),
           Container(
             margin: EdgeInsets.only(top: 50),
             padding: EdgeInsets.only(left: width * 0.2, right: width * 0.2),
@@ -123,117 +212,13 @@ class _SelectionState extends State<Selection> {
                               fontSize: 20, fontWeight: FontWeight.w700),
                         ),
                         onPressed: () {
-                          bool isfine = false;
-                          if (players.value == null || overs.value == null) {
-                            showDialog<String>(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                title: const Text(
-                                    "Values Can't Be Empty,Enter Please!"),
-                                titleTextStyle: TextStyle(
-                                    color: primary_color, fontSize: 15),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, 'OK'),
-                                    child: const Text(
-                                      'OK',
-                                      style: TextStyle(
-                                          fontSize: 20, color: primary_color),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          } else if ((int.parse(players.text) > 11)) {
-                            players.clear();
-                            showDialog<String>(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                title: const Text(
-                                    "Players Can't Be Greater Than 11"),
-                                titleTextStyle: TextStyle(
-                                    color: primary_color, fontSize: 25),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, 'OK'),
-                                    child: const Text(
-                                      'OK',
-                                      style: TextStyle(
-                                          fontSize: 20, color: primary_color),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          } else if (((int.parse(overs.text) == 0)) ||
-                              (int.parse(players.text) == 0)) {
-                            if (int.parse(overs.text) == 0) {
-                              overs.clear();
-                            }
-                            if (int.parse(players.text) == 0) {
-                              players.clear();
-                            } else {
-                              players.clear();
-                              overs.clear();
-                            }
-                            showDialog<String>(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                title: const Text("Values Can't Be 0"),
-                                titleTextStyle: TextStyle(
-                                    color: primary_color, fontSize: 25),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, 'OK'),
-                                    child: const Text(
-                                      'OK',
-                                      style: TextStyle(
-                                          fontSize: 20, color: primary_color),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          } else if (int.parse(overs.text) > 50) {
-                            showDialog<String>(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                title: const Text(
-                                    "Are You Sure to Play Too Many Overs ?"),
-                                titleTextStyle: TextStyle(
-                                    color: primary_color, fontSize: 20),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, 'NO'),
-                                    child: const Text(
-                                      'NO',
-                                      style: TextStyle(
-                                          fontSize: 20, color: primary_color),
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, 'YES'),
-                                    child: const Text(
-                                      'YES',
-                                      style: TextStyle(
-                                          fontSize: 20, color: primary_color),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            );
-                          } else {
+                          debugPrint(validate(context).toString());
+                          if (validate(context)) {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => MainHome(
-                                          match: getMatch(),
-                                        )));
+                                    builder: (context) => MainPage()));
+                            _NamesDialog(context);
                           }
                         },
                       ),
@@ -245,6 +230,50 @@ class _SelectionState extends State<Selection> {
           )
         ],
       )),
+    );
+  }
+
+  bool validate(BuildContext context) {
+    var _players = players.text.toString();
+    var _overs = overs.text.toString();
+    if (_players.isEmpty ||
+        _overs.isEmpty ||
+        int.parse(_players) > 11 ||
+        int.parse(_overs) > 50 ||
+        int.parse(_players) < 2 ||
+        int.parse(_overs) < 1) {
+      // empty
+      showAlertDialog(context);
+    } else {
+      return true;
+    }
+    return false;
+  }
+
+  showAlertDialog(BuildContext context) {
+    // Create button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    // Create AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Ivalid Values"),
+      content: Text("Please enter correct values!"),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 

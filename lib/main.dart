@@ -1,7 +1,14 @@
 import 'package:cric_scoring/constants.dart';
+import 'package:cric_scoring/screens/dashboard.dart';
+import 'package:cric_scoring/screens/dashboard_page.dart';
 import 'package:cric_scoring/screens/history.dart';
+import 'package:cric_scoring/screens/main_page.dart';
 import 'package:cric_scoring/screens/splash_screen.dart';
+import 'package:cric_scoring/screens/start_selction.dart';
+import 'package:cric_scoring/testing.dart';
 import 'package:flutter/material.dart';
+
+import 'SQL_Assignment/note_list.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +27,7 @@ class MyApp extends StatelessWidget {
         textTheme: Theme.of(context).textTheme.apply(bodyColor: text_color),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Splash_Screen(),
+      home: const Splash_Screen(),
     );
   }
 }
