@@ -24,12 +24,14 @@ class BallRecord {
   int overno = 0;
   String bowler = "";
   String batsman = "";
+  String? other;
   BallRecord(
       {required this.ballno,
       required this.score,
       required this.bowler,
       required this.batsman,
-      required this.overno});
+      required this.overno,
+      this.other});
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{};
@@ -39,6 +41,9 @@ class BallRecord {
     map['score'] = score;
     map['bowler'] = bowler;
     map['batsman'] = batsman;
+    if (other != null) {
+      map['other'] = other;
+    }
 
     return map;
   }
@@ -50,5 +55,8 @@ class BallRecord {
     score = map['score'];
     bowler = map['bowler'];
     batsman = map['batsman'];
+    if (map['other'] != null) {
+      other = map['other'];
+    }
   }
 }

@@ -5,6 +5,7 @@ import 'dart:html';
 import 'package:cric_scoring/components/widgets/create_text.dart';
 import 'package:cric_scoring/components/widgets/header_part.dart';
 import 'package:cric_scoring/constants.dart';
+import 'package:cric_scoring/controller/match_controller.dart';
 import 'package:cric_scoring/modal/cricket_match.dart';
 import 'package:cric_scoring/screens/dashboard.dart';
 import 'package:cric_scoring/screens/main_page.dart';
@@ -36,9 +37,6 @@ class _SelectionState extends State<Selection> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 TextField(
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
                   cursorColor: primary_color,
                   controller: facingBatsman,
                   style: TextStyle(color: Colors.black),
@@ -52,9 +50,6 @@ class _SelectionState extends State<Selection> {
                       labelStyle: TextStyle(color: primary_color)),
                 ),
                 TextField(
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
                   cursorColor: primary_color,
                   controller: runingBatsman,
                   style: TextStyle(color: Colors.black),
@@ -68,9 +63,6 @@ class _SelectionState extends State<Selection> {
                       labelStyle: TextStyle(color: primary_color)),
                 ),
                 TextField(
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
                   cursorColor: primary_color,
                   controller: bowler,
                   style: TextStyle(color: Colors.black),
@@ -93,7 +85,12 @@ class _SelectionState extends State<Selection> {
                   if (facingBatsman.text.isNotEmpty &&
                       runingBatsman.text.isNotEmpty &&
                       bowler.text.isNotEmpty) {
+                    MatchController.player_1 = facingBatsman.text;
+                    MatchController.player_2 = runingBatsman.text;
+                    MatchController.bowler = bowler.text;
                     Navigator.of(context).pop();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => MainPage()));
                   } else {
                     showAlertDialog(context);
                   }
@@ -213,10 +210,9 @@ class _SelectionState extends State<Selection> {
                         ),
                         onPressed: () {
                           if (validate(context)) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MainPage()));
+                            MatchController.noOfOvers = int.parse(overs.text);
+                            MatchController.noOfPlayers =
+                                int.parse(players.text);
                             _NamesDialog(context);
                           }
                         },

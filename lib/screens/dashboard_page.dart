@@ -4,6 +4,8 @@ import 'package:cric_scoring/components/widgets/header_part.dart';
 import 'package:cric_scoring/components/widgets/raised_button.dart';
 import 'package:cric_scoring/components/widgets/snakbar.dart';
 import 'package:cric_scoring/constants.dart';
+import 'package:cric_scoring/controller/match_controller.dart';
+import 'package:cric_scoring/modal/ball_record.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,23 +15,41 @@ class Dashboard_Page extends StatefulWidget {
 }
 
 class _Dashboard_PageState extends State<Dashboard_Page> {
-  String _batsman1Name = "Mavia"; //getBatsman1Name()
-  String _batsman2Name = "Asad Tariq"; //getBatsman2Name()
-  String _bolwerName = "Ali Raza"; //getBowlerName()
+  String _batsman1Name = ""; //getBatsman1Name()
+  String _batsman2Name = ""; //getBatsman2Name()
+  String _bolwerName = ""; //getBowlerName()
   String _batsman1Total = "10 on 17 balls"; //getBatsman1Total()
   String _batsman2Total = "32 on 48 balls"; //getBatsman2Total()
-  String _currentScore = "42/0"; //getCurrentScore()
-  String _currentOvers = "7.3";
-  String _totalOvers = "7.3"; //getCurrentOvers()
-  String _currentRR = "6.1"; //getCurrentRunRate()
+  String _currentScore = ""; //getCurrentScore()
+  String _currentOvers = "";
+  String _totalOvers = ""; //getCurrentOvers()
+  String _currentRR = ""; //getCurrentRunRate()
   String facingBatsmanName = "";
   String selectedBatsman = "";
+  TextEditingController newBatsman = TextEditingController(text: "New Batsman");
+  TextEditingController extraRunOnOut = TextEditingController();
+  TextEditingController newBowler = TextEditingController(text: "New Bowler");
+  int currentScore = 0;
+  int currentOut = 0;
 
   @override
   void initState() {
+    super.initState();
+    updateNames();
+  }
+
+  void updateNames() {
+    _batsman1Name = MatchController.player_1 ?? "batsman1";
+    _batsman2Name = MatchController.player_2 ?? "batsman2";
+    _bolwerName = MatchController.bowler ?? "bowler";
+    _totalOvers = MatchController.noOfOvers.toString();
     selectedBatsman = _batsman1Name;
     facingBatsmanName = selectedBatsman;
-    debugPrint(facingBatsmanName);
+    _currentScore = currentScore.toString() + "/" + currentOut.toString();
+    _currentOvers = MatchController.currentOverNo.toString() +
+        "." +
+        MatchController.currentBall.toString();
+    _currentRR = (currentScore / MatchController.currentOverNo).toString();
   }
 
   List<DropdownMenuItem<String>> get facingBatsmanItems {
@@ -59,6 +79,123 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
 
   Widget _scoreBall(String text) {
     return Ball(text: text);
+  }
+
+  // on out dialouge
+
+  _NamesDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Create_Text(text: "Who is Out ?"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                DropdownButton(
+                  dropdownColor: primary_color,
+                  style: const TextStyle(
+                    color: black_color,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  value: selectedBatsman,
+                  items: facingBatsmanItems,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedBatsman = newValue!;
+                      facingBatsmanName = selectedBatsman;
+                    });
+                  },
+                ),
+                TextField(
+                  cursorColor: primary_color,
+                  controller: newBatsman,
+                  style: TextStyle(color: Colors.black),
+                  cursorHeight: 30,
+                  decoration: const InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: primary_color),
+                      ),
+                      border: OutlineInputBorder(),
+                      labelText: 'Name of New Batsman',
+                      labelStyle: TextStyle(color: primary_color)),
+                ),
+                TextField(
+                  cursorColor: primary_color,
+                  controller: extraRunOnOut,
+                  style: TextStyle(color: Colors.black),
+                  cursorHeight: 30,
+                  decoration: const InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: primary_color),
+                      ),
+                      border: OutlineInputBorder(),
+                      labelText: 'Any Extra Run?',
+                      labelStyle: TextStyle(color: primary_color)),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              // ignore: unnecessary_new
+              new FlatButton(
+                child: new Create_Text(text: "Cancel"),
+                onPressed: () {},
+              ),
+              new FlatButton(
+                child: new Create_Text(text: "Done"),
+                onPressed: () {},
+              )
+            ],
+          );
+        });
+  }
+
+  void onOut() {
+    _NamesDialog(context);
+  }
+
+  // add functions
+  void throwBall(
+      {required int run,
+      int ballCount = 1,
+      bool isShuffle = false,
+      String? other}) {
+    String text = other ?? run.toString();
+    MatchController.addBall(BallRecord(
+        ballno: MatchController.currentBall,
+        score: run,
+        bowler: _bolwerName,
+        batsman: selectedBatsman,
+        overno: MatchController.currentOverNo));
+    setState(() {
+      if (selectedBatsman == _batsman1Name) {
+        _bat1ScoreList.add(_scoreBall(text));
+      } else {
+        _bat2ScoreList.add(_scoreBall(text));
+      }
+      _bowlerScoreList.add(_scoreBall(text));
+      currentScore += run;
+      MatchController.currentBall += ballCount;
+      if (MatchController.currentBall == 6) {
+        MatchController.currentOverNo += 1;
+        MatchController.currentBall = 1;
+      }
+      _currentScore = currentScore.toString() + "/" + currentOut.toString();
+      _currentOvers = MatchController.currentOverNo.toString() +
+          "." +
+          MatchController.currentBall.toString();
+      _currentRR = (currentScore / MatchController.currentOverNo).toString();
+    });
+    if (isShuffle) {
+      setState(() {
+        if (selectedBatsman == _batsman1Name) {
+          selectedBatsman = _batsman2Name;
+        } else {
+          selectedBatsman = _batsman1Name;
+        }
+      });
+    }
   }
 
   @override
@@ -468,14 +605,17 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
                 Raised_Button(
                   width: _width * 0.2,
                   text: "Out",
+                  onPressed: () => {onOut()},
                 ),
                 Raised_Button(
                   width: _width * 0.2,
                   text: "Wide",
+                  onPressed: () => throwBall(run: 1, ballCount: 0, other: "W"),
                 ),
                 Raised_Button(
                   width: _width * 0.2,
                   text: "Dot",
+                  onPressed: () => {throwBall(run: 0, other: ".")},
                 )
               ],
             ),
@@ -485,22 +625,30 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
                 Raised_Button(
                   text: "No Ball",
                   width: _width * 0.2,
+                  onPressed: () =>
+                      {throwBall(run: 1, ballCount: 0, other: "N")},
                 ),
                 Raised_Button(
-                  text: "5",
-                  width: _width * 0.175,
-                  onPressed: () => _addRun("5", facingBatsmanName),
-                ),
+                    text: "5",
+                    width: _width * 0.175,
+                    onPressed: () => throwBall(
+                        run: 5,
+                        isShuffle: true) //_addRun("5", facingBatsmanName),
+                    ),
                 Raised_Button(
-                  text: "3",
-                  width: _width * 0.175,
-                  onPressed: () => _addRun("3", facingBatsmanName),
-                ),
+                    text: "3",
+                    width: _width * 0.175,
+                    onPressed: () => throwBall(
+                        run: 3,
+                        isShuffle: true) //_addRun("3", facingBatsmanName),
+                    ),
                 Raised_Button(
-                  text: "1",
-                  width: _width * 0.175,
-                  onPressed: () => _addRun("1", facingBatsmanName),
-                ),
+                    text: "1",
+                    width: _width * 0.175,
+                    onPressed: () => throwBall(
+                        run: 1,
+                        isShuffle: true) //_addRun("1", facingBatsmanName),
+                    ),
               ],
             ),
             Row(
@@ -509,21 +657,25 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
                 Raised_Button(
                   text: "Dead",
                   width: _width * 0.2,
+                  onPressed: () =>
+                      {throwBall(run: 0, ballCount: 0, other: "D")},
                 ),
                 Raised_Button(
-                  text: "6",
-                  width: _width * 0.175,
-                  onPressed: () => _addRun("6", facingBatsmanName),
-                ),
+                    text: "6",
+                    width: _width * 0.175,
+                    onPressed: () =>
+                        throwBall(run: 6) //_addRun("6", facingBatsmanName),
+                    ),
                 Raised_Button(
-                  text: "4",
-                  width: _width * 0.175,
-                  onPressed: () => _addRun("4", facingBatsmanName),
-                ),
+                    text: "4",
+                    width: _width * 0.175,
+                    onPressed: () =>
+                        throwBall(run: 4) //_addRun("4", facingBatsmanName),
+                    ),
                 Raised_Button(
                     text: "2",
                     width: _width * 0.175,
-                    onPressed: () => _addRun("2", facingBatsmanName)),
+                    onPressed: () => throwBall(run: 2)),
               ],
             )
           ],

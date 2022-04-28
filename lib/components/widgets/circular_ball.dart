@@ -20,6 +20,10 @@ class Ball extends StatelessWidget {
       _textColor = background_color;
     } else if (text.toLowerCase() == "5") {
       _backgroundColor = Colors.black.withOpacity(0.8);
+    } else if (text.toLowerCase() == "w") {
+      _backgroundColor = Colors.red.withOpacity(0.6);
+    } else if (text.toLowerCase() == "n") {
+      _backgroundColor = Colors.blueGrey.withOpacity(0.6);
     }
     return Container(
       margin: EdgeInsets.only(left: 1.5),
