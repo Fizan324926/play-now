@@ -34,46 +34,56 @@ class _SelectionState extends State<Selection> {
           return AlertDialog(
             title: Create_Text(text: "One More Step!"),
             content: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TextField(
-                  cursorColor: primary_color,
-                  controller: facingBatsman,
-                  style: TextStyle(color: Colors.black),
-                  cursorHeight: 30,
-                  decoration: const InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: primary_color),
-                      ),
-                      border: OutlineInputBorder(),
-                      labelText: 'Name of facing Batsman',
-                      labelStyle: TextStyle(color: primary_color)),
+                Container(
+                  padding: EdgeInsets.all(5),
+                  child: TextField(
+                    cursorColor: primary_color,
+                    controller: facingBatsman,
+                    style: TextStyle(color: Colors.black),
+                    cursorHeight: 30,
+                    decoration: const InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: primary_color),
+                        ),
+                        border: OutlineInputBorder(),
+                        labelText: 'Name of facing Batsman',
+                        labelStyle: TextStyle(color: primary_color)),
+                  ),
                 ),
-                TextField(
-                  cursorColor: primary_color,
-                  controller: runingBatsman,
-                  style: TextStyle(color: Colors.black),
-                  cursorHeight: 30,
-                  decoration: const InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: primary_color),
-                      ),
-                      border: OutlineInputBorder(),
-                      labelText: 'Name of Runing Batsman',
-                      labelStyle: TextStyle(color: primary_color)),
+                Container(
+                  padding: EdgeInsets.all(5),
+                  child: TextField(
+                    cursorColor: primary_color,
+                    controller: runingBatsman,
+                    style: TextStyle(color: Colors.black),
+                    cursorHeight: 30,
+                    decoration: const InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: primary_color),
+                        ),
+                        border: OutlineInputBorder(),
+                        labelText: 'Name of Runing Batsman',
+                        labelStyle: TextStyle(color: primary_color)),
+                  ),
                 ),
-                TextField(
-                  cursorColor: primary_color,
-                  controller: bowler,
-                  style: TextStyle(color: Colors.black),
-                  cursorHeight: 30,
-                  decoration: const InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: primary_color),
-                      ),
-                      border: OutlineInputBorder(),
-                      labelText: 'Name of Bowler',
-                      labelStyle: TextStyle(color: primary_color)),
+                Container(
+                  padding: EdgeInsets.all(5),
+                  child: TextField(
+                    cursorColor: primary_color,
+                    controller: bowler,
+                    style: TextStyle(color: Colors.black),
+                    cursorHeight: 30,
+                    decoration: const InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: primary_color),
+                        ),
+                        border: OutlineInputBorder(),
+                        labelText: 'Name of Bowler',
+                        labelStyle: TextStyle(color: primary_color)),
+                  ),
                 ),
               ],
             ),
@@ -189,7 +199,13 @@ class _SelectionState extends State<Selection> {
                               fontSize: 20,
                               fontWeight: FontWeight.w700),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Home_Screen()),
+                          );
+                        },
                       ),
                     ),
                     Container(

@@ -18,14 +18,15 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
   String _batsman1Name = ""; //getBatsman1Name()
   String _batsman2Name = ""; //getBatsman2Name()
   String _bolwerName = ""; //getBowlerName()
-  String _batsman1Total = "10 on 17 balls"; //getBatsman1Total()
-  String _batsman2Total = "32 on 48 balls"; //getBatsman2Total()
+  String _batsman1Total = ""; //getBatsman1Total()
+  String _batsman2Total = ""; //getBatsman2Total()
   String _currentScore = ""; //getCurrentScore()
   String _currentOvers = "";
   String _totalOvers = ""; //getCurrentOvers()
   String _currentRR = ""; //getCurrentRunRate()
   String facingBatsmanName = "";
   String selectedBatsman = "";
+  String oSelectedBatsman = "";
   TextEditingController newBatsman = TextEditingController(text: "New Batsman");
   TextEditingController extraRunOnOut = TextEditingController();
   TextEditingController newBowler = TextEditingController(text: "New Bowler");
@@ -49,7 +50,8 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
     _currentOvers = MatchController.currentOverNo.toString() +
         "." +
         MatchController.currentBall.toString();
-    _currentRR = (currentScore / MatchController.currentOverNo).toString();
+    _currentRR =
+        (currentScore / MatchController.currentOverNo).toStringAsFixed(2);
   }
 
   List<DropdownMenuItem<String>> get facingBatsmanItems {
@@ -91,48 +93,57 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
             title: Create_Text(text: "Who is Out ?"),
             content: Column(
               mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                DropdownButton(
-                  dropdownColor: primary_color,
-                  style: const TextStyle(
-                    color: black_color,
-                    fontWeight: FontWeight.w500,
+                Container(
+                  padding: EdgeInsets.all(5),
+                  child: DropdownButton(
+                    dropdownColor: primary_color,
+                    style: const TextStyle(
+                      color: black_color,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    value: oSelectedBatsman,
+                    items: facingBatsmanItems,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        oSelectedBatsman = newValue!;
+                        facingBatsmanName = oSelectedBatsman;
+                      });
+                    },
                   ),
-                  value: selectedBatsman,
-                  items: facingBatsmanItems,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedBatsman = newValue!;
-                      facingBatsmanName = selectedBatsman;
-                    });
-                  },
                 ),
-                TextField(
-                  cursorColor: primary_color,
-                  controller: newBatsman,
-                  style: TextStyle(color: Colors.black),
-                  cursorHeight: 30,
-                  decoration: const InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: primary_color),
-                      ),
-                      border: OutlineInputBorder(),
-                      labelText: 'Name of New Batsman',
-                      labelStyle: TextStyle(color: primary_color)),
+                Container(
+                  padding: EdgeInsets.all(5),
+                  child: TextField(
+                    cursorColor: primary_color,
+                    controller: newBatsman,
+                    style: TextStyle(color: Colors.black),
+                    cursorHeight: 30,
+                    decoration: const InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: primary_color),
+                        ),
+                        border: OutlineInputBorder(),
+                        labelText: 'Name of New Batsman',
+                        labelStyle: TextStyle(color: primary_color)),
+                  ),
                 ),
-                TextField(
-                  cursorColor: primary_color,
-                  controller: extraRunOnOut,
-                  style: TextStyle(color: Colors.black),
-                  cursorHeight: 30,
-                  decoration: const InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: primary_color),
-                      ),
-                      border: OutlineInputBorder(),
-                      labelText: 'Any Extra Run?',
-                      labelStyle: TextStyle(color: primary_color)),
+                Container(
+                  padding: EdgeInsets.all(5),
+                  child: TextField(
+                    cursorColor: primary_color,
+                    controller: extraRunOnOut,
+                    style: TextStyle(color: Colors.black),
+                    cursorHeight: 30,
+                    decoration: const InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: primary_color),
+                        ),
+                        border: OutlineInputBorder(),
+                        labelText: 'Any Extra Run?',
+                        labelStyle: TextStyle(color: primary_color)),
+                  ),
                 ),
               ],
             ),
@@ -140,11 +151,15 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
               // ignore: unnecessary_new
               new FlatButton(
                 child: new Create_Text(text: "Cancel"),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
               ),
               new FlatButton(
                 child: new Create_Text(text: "Done"),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
               )
             ],
           );
@@ -152,6 +167,7 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
   }
 
   void onOut() {
+    oSelectedBatsman = selectedBatsman;
     _NamesDialog(context);
   }
 
@@ -179,7 +195,8 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
       MatchController.currentBall += ballCount;
       if (MatchController.currentBall == 6) {
         MatchController.currentOverNo += 1;
-        MatchController.currentBall = 1;
+        MatchController.currentBall = 0;
+        updateOvers();
       }
       _currentScore = currentScore.toString() + "/" + currentOut.toString();
       _currentOvers = MatchController.currentOverNo.toString() +
@@ -196,6 +213,14 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
         }
       });
     }
+  }
+
+  void updateOvers() {
+    setState(() {
+      _bat1ScoreList.clear();
+      _bat2ScoreList.clear();
+      _bowlerScoreList.clear();
+    });
   }
 
   @override
@@ -320,7 +345,7 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
                       width: _width * 0.3,
                       decoration: BoxDecoration(),
                       child: Create_Text(
-                        text: _batsman1Total,
+                        text: MatchController.getBatsmanStats(_batsman1Name),
                         txt_color: black_color,
                         txt_weight: FontWeight.w400,
                         txt_size: 16,
@@ -410,7 +435,7 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
                       width: _width * 0.3,
                       decoration: BoxDecoration(),
                       child: Create_Text(
-                        text: _batsman2Total,
+                        text: MatchController.getBatsmanStats(_batsman2Name),
                         txt_color: black_color,
                         txt_weight: FontWeight.w400,
                         txt_size: 16,
@@ -747,10 +772,9 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
   Expanded BuildTeamsPart(double _dTeamsHeight, double _width) {
     return Expanded(
       child: Container(
-          height: _dTeamsHeight,
-          width: _width,
-          //color: Colors.green,
-          child: const Text("10 % Teams Stats")),
+        height: _dTeamsHeight,
+        width: _width,
+      ),
     );
   }
 

@@ -12,12 +12,12 @@ class MatchController {
   static Map<String, List<BallRecord>> batsmen = {};
   static DatabaseHelper? databaseHelper;
 
-  void init() {
+  static void init() {
     databaseHelper ??= DatabaseHelper();
     databaseHelper?.initializeDatabase();
   }
 
-  void addBatsman(String name) {
+  static void addBatsman(String name) {
     if (batsmen[name] == null) {
       batsmen[name] = [];
     }
@@ -25,6 +25,23 @@ class MatchController {
 
   static void addBall(BallRecord record) {
     databaseHelper?.insertBallRecord(record);
+    if (batsmen[record.batsman] == null) {
+      batsmen[record.batsman] = [];
+    }
     batsmen[record.batsman]?.add(record);
+  }
+
+  static String getBatsmanStats(String name) {
+    if (batsmen[name] == null) {
+      return "0 on 0 Balls";
+    }
+    int score = 0;
+    for (var record in batsmen[name]!) {
+      score += record.score;
+    }
+    return score.toString() +
+        " on " +
+        batsmen[name]!.length.toString() +
+        " balls";
   }
 }

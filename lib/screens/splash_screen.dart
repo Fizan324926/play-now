@@ -38,9 +38,8 @@ class _Splash_ScreenState extends State<Splash_Screen> {
               child: CircleAvatar(
                 backgroundColor: background_color,
                 radius: 75,
-                backgroundImage: AssetImage(
-                  'assets/images/logo1.png',
-                ),
+                backgroundImage: NetworkImage(
+                    "https://cdn.pixabay.com/photo/2014/03/24/17/15/cricket-ball-295206__340.png"),
               ),
             ),
             Container(

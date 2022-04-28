@@ -14,7 +14,7 @@ class Home_Screen extends StatelessWidget {
     double height = MediaQuery.of(context).size.height;
     String start_text = "START NEW";
     String load_text = "LOAD SAVED";
-    String settings_text = "SETTINGS";
+    String settings_text = "HELP";
     double container_height = height * 0.3 - 30;
 
     final ButtonStyle flatButtonStyle = TextButton.styleFrom(
@@ -69,12 +69,10 @@ class Home_Screen extends StatelessWidget {
                                     backgroundColor: Colors.black,
                                     radius: 40,
                                     child: CircleAvatar(
-                                      backgroundColor: background_color,
-                                      radius: 38,
-                                      backgroundImage: AssetImage(
-                                        'assets/images/bg_circle.png',
-                                      ),
-                                    ),
+                                        backgroundColor: background_color,
+                                        radius: 38,
+                                        backgroundImage: NetworkImage(
+                                            "https://cdn.pixabay.com/photo/2021/10/08/06/51/virat-kohli-6690366__340.png")),
                                   )
                                 ],
                               )
@@ -114,10 +112,8 @@ class Home_Screen extends StatelessWidget {
                                     child: CircleAvatar(
                                       backgroundColor: background_color,
                                       radius: 38,
-                                      child: Image.asset(
-                                        "assets/images/logo1.png",
-                                        fit: BoxFit.contain,
-                                      ),
+                                      backgroundImage: NetworkImage(
+                                          "https://cdn.pixabay.com/photo/2017/10/18/14/31/box-2864329__340.png"),
                                     ),
                                   ),
                                 ],
@@ -159,9 +155,8 @@ class Home_Screen extends StatelessWidget {
                                     child: CircleAvatar(
                                       backgroundColor: background_color,
                                       radius: 38,
-                                      backgroundImage: AssetImage(
-                                        'assets/images/bg_lines.png',
-                                      ),
+                                      backgroundImage: NetworkImage(
+                                          "https://cdn.pixabay.com/photo/2015/10/31/12/00/question-1015308__340.jpg"),
                                     ),
                                   ),
                                 ],
