@@ -141,7 +141,8 @@ class Home_Screen extends StatelessWidget {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => Settings()),
+                                              builder: (context) =>
+                                                  const VideoPlayerScreen()),
                                         );
                                       },
                                       child: Text(

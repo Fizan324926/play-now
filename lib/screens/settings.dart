@@ -1,198 +1,113 @@
-import 'package:cric_scoring/components/widgets/app_bar.dart';
-import 'package:cric_scoring/components/widgets/create_text.dart';
-import 'package:cric_scoring/constants.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'dart:async';
 
-class Settings extends StatefulWidget {
+import 'package:cric_scoring/components/widgets/header_part.dart';
+import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
+
+import '../constants.dart';
+
+class VideoPlayerScreen extends StatefulWidget {
+  const VideoPlayerScreen({Key? key}) : super(key: key);
+
   @override
-  State<Settings> createState() => _SettingsState();
+  _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
 }
 
-class _SettingsState extends State<Settings> {
-  final _playersController = TextEditingController();
+class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
+  late VideoPlayerController _controller;
+  late Future<void> _initializeVideoPlayerFuture;
 
-  final _oversController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
 
-  final _whiteRunController = TextEditingController();
+    // Create and store the VideoPlayerController. The VideoPlayerController
+    // offers several different constructors to play videos from assets, files,
+    // or the internet.
+    _controller = VideoPlayerController.network(
+      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
+    );
 
-  bool validatePlayers() {
-    int players = int.parse(_playersController.text);
-    if (players > 11) {
-      return false;
-    }
-    return true;
+    // Initialize the controller and store the Future for later use.
+    _initializeVideoPlayerFuture = _controller.initialize();
+
+    // Use the controller to loop the video.
+    _controller.setLooping(true);
   }
 
-  bool validateOvers() {
-    int overs = int.parse(_oversController.text);
-    if (overs > 50) {
-      return false;
-    }
-    return true;
-  }
+  @override
+  void dispose() {
+    // Ensure disposing of the VideoPlayerController to free up resources.
+    _controller.dispose();
 
-  bool validateWhiteBallRun() {
-    int whiteRun = int.parse(_whiteRunController.text);
-    if (whiteRun > 3) {
-      return false;
-    }
-    return true;
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
-      appBar: APPBAR(
-        text: "Settings",
-      ),
+      // Use a FutureBuilder to display a loading spinner while waiting for the
+      // VideoPlayerController to finish initializing.
       body: Column(
         children: [
-          Container(
-            height: 20,
-            decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20)),
-                color: primary_color),
-          ),
-          Form(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(30.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Expanded(
-                            child: Create_Text(
-                                text: "Players", txt_weight: FontWeight.w500)),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: TextFormField(
-                              controller: _playersController,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Expanded(
-                            child: Create_Text(
-                                text: "Overs", txt_weight: FontWeight.w500)),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: TextFormField(
-                              controller: _oversController,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Expanded(
-                            child: Create_Text(
-                          text: "White Ball Run",
-                          txt_weight: FontWeight.w500,
-                        )),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: TextFormField(
-                              controller: _whiteRunController,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: TextButton(
-                        child: Create_Text(
-                          text: "Save",
-                          txt_color: primary_color,
-                        ),
-                        onPressed: () {
-                          if (!validatePlayers()) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                title: const Text("Invalid Players"),
-                                content:
-                                    const Text("Players number is not valid"),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () => {Navigator.pop(context)},
-                                    child: const Text('Ok'),
-                                  ),
-                                ],
-                              ),
-                            );
-                            return;
-                          }
-                          if (!validateOvers()) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                title: const Text("Invalid Overs"),
-                                content: const Text("Over number is not valid"),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () => {Navigator.pop(context)},
-                                    child: const Text('Ok'),
-                                  ),
-                                ],
-                              ),
-                            );
-                            return;
-                          }
-                          if (!validatePlayers()) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                title: const Text("Invalid White Run"),
-                                content:
-                                    const Text("White Ball Run is not valid"),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () => {Navigator.pop(context)},
-                                    child: const Text('Ok'),
-                                  ),
-                                ],
-                              ),
-                            );
-                            return;
-                          }
-                        },
-                      ),
-                    )
-                  ],
-                ),
-              ),
+          BuildHeader(height * 0.2, width),
+          Expanded(
+            child: FutureBuilder(
+              future: _initializeVideoPlayerFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  // If the VideoPlayerController has finished initialization, use
+                  // the data it provides to limit the aspect ratio of the video.
+                  return AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    // Use the VideoPlayer widget to display the video.
+                    child: VideoPlayer(_controller),
+                  );
+                } else {
+                  // If the VideoPlayerController is still initializing, show a
+                  // loading spinner.
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
             ),
-          ),
+          )
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Wrap the play or pause in a call to `setState`. This ensures the
+          // correct icon is shown.
+          setState(() {
+            // If the video is playing, pause it.
+            if (_controller.value.isPlaying) {
+              _controller.pause();
+            } else {
+              // If the video is paused, play it.
+              _controller.play();
+            }
+          });
+        },
+        // Display the correct icon depending on the state of the player.
+        child: Icon(
+          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+        ),
       ),
     );
   }
+}
+
+Container BuildHeader(double _dHeaderHeight, double _width) {
+  return Container(
+      height: _dHeaderHeight,
+      width: _width,
+      child: const Header_Part(
+        textMain: "Help",
+        totalHeight: 0.1,
+        backgroudColor: background_color,
+      ));
 }
