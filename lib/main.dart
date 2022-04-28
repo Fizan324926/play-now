@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         textTheme: Theme.of(context).textTheme.apply(bodyColor: text_color),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const Splash_Screen(),
+      home: Dashboard_Page(),
     );
   }
 }
