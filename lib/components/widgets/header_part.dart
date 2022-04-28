@@ -9,8 +9,8 @@ class Header_Part extends StatefulWidget {
   final Color? backgroudColor;
   final bool? isGoBack;
   final bool? isHelp;
-  final VoidCallback? goBackFunction;
-  final VoidCallback? goHelpFunction;
+  final Function? goBackFunction;
+  final Function? goHelpFunction;
   const Header_Part(
       {Key? key,
       required this.textMain,
@@ -46,7 +46,7 @@ class _Header_PartState extends State<Header_Part> {
         backgroundColor: primary_color,
         elevation: 0,
         hoverColor: text_color,
-        onPressed: widget.goBackFunction ?? () {},
+        onPressed: () => {Navigator.of(context).pop()},
         child: Icon(Icons.skip_previous),
       ));
     }
@@ -57,7 +57,7 @@ class _Header_PartState extends State<Header_Part> {
         backgroundColor: primary_color,
         elevation: 0,
         hoverColor: text_color,
-        onPressed: widget.goHelpFunction ?? () {},
+        onPressed: () {},
         child: Icon(Icons.help_rounded),
       ));
     }

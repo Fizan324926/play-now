@@ -24,9 +24,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     // Create and store the VideoPlayerController. The VideoPlayerController
     // offers several different constructors to play videos from assets, files,
     // or the internet.
-    _controller = VideoPlayerController.network(
-      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
-    );
+    _controller = VideoPlayerController.asset('assets/cricket_help.mp4');
 
     // Initialize the controller and store the Future for later use.
     _initializeVideoPlayerFuture = _controller.initialize();
@@ -43,6 +41,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     super.dispose();
   }
 
+  void goBack() {}
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -53,7 +53,15 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       // VideoPlayerController to finish initializing.
       body: Column(
         children: [
-          BuildHeader(height * 0.2, width),
+          Container(
+              height: height,
+              width: width,
+              child: const Header_Part(
+                textMain: "Help",
+                totalHeight: 0.1,
+                backgroudColor: background_color,
+                isGoBack: true,
+              )),
           Expanded(
             child: FutureBuilder(
               future: _initializeVideoPlayerFuture,
@@ -99,15 +107,4 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       ),
     );
   }
-}
-
-Container BuildHeader(double _dHeaderHeight, double _width) {
-  return Container(
-      height: _dHeaderHeight,
-      width: _width,
-      child: const Header_Part(
-        textMain: "Help",
-        totalHeight: 0.1,
-        backgroudColor: background_color,
-      ));
 }

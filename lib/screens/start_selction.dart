@@ -1,13 +1,10 @@
 // ignore_for_file: unnecessary_new
 
-import 'dart:html';
-
 import 'package:cric_scoring/components/widgets/create_text.dart';
 import 'package:cric_scoring/components/widgets/header_part.dart';
 import 'package:cric_scoring/constants.dart';
 import 'package:cric_scoring/controller/match_controller.dart';
 import 'package:cric_scoring/modal/cricket_match.dart';
-import 'package:cric_scoring/screens/dashboard.dart';
 import 'package:cric_scoring/screens/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cric_scoring/screens/home_screen.dart';
@@ -99,7 +96,7 @@ class _SelectionState extends State<Selection> {
                     MatchController.player_2 = runingBatsman.text;
                     MatchController.bowler = bowler.text;
                     Navigator.of(context).pop();
-                    Navigator.push(context,
+                    Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => MainPage()));
                   } else {
                     showAlertDialog(context);

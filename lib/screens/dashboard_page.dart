@@ -786,6 +786,7 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
           textMain: "Home",
           totalHeight: 0.1,
           backgroudColor: black_color,
+          isGoBack: true,
         ));
   }
 }
