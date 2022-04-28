@@ -20,14 +20,26 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
   String _currentScore = "42/0"; //getCurrentScore()
   String _currentOvers = "7.3"; //getCurrentOvers()
   String _currentRR = "6.1"; //getCurrentRunRate()
+  String facingBatsmanName = "Ahmad";
+
+  StepState() {
+    String facingBatsmanName = "Ahmad";
+  }
 
   /**
    *        Batsman1 Score
    */
   List<Widget> _bat1ScoreList = [];
-  void _addRun(String run) {
+  List<Widget> _bat2ScoreList = [];
+  List<Widget> _bowlerScoreList = [];
+  void _addRun(String run, String facingBatsman) {
     setState(() {
-      _bat1ScoreList.add(_scoreBall(run));
+      if (facingBatsman.toLowerCase() == _batsman1Name.toLowerCase()) {
+        _bat1ScoreList.add(_scoreBall(run));
+      } else {
+        _bat2ScoreList.add(_scoreBall(run));
+      }
+      _bowlerScoreList.add(_scoreBall(run));
     });
   }
 
@@ -286,9 +298,9 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
                             height: 18,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              itemCount: _bat1ScoreList.length,
+                              itemCount: _bat2ScoreList.length,
                               itemBuilder: (context, index) {
-                                return _bat1ScoreList[index];
+                                return _bat2ScoreList[index];
                               },
                             ),
                           ),
@@ -357,15 +369,50 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
                                    Bowler    Balls Stats
                        */
             Container(
-              width: _width * 0.7,
-              //decoration: BoxDecoration(color: background_color),
-              child: Create_Text(
-                text: "stats",
-                txt_size: 14,
-                txt_color: black_color,
-                txt_weight: FontWeight.w400,
-              ),
-            )
+                width: _width * 0.7,
+                //decoration: BoxDecoration(color: background_color),
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      child: Create_Text(
+                        text: "This over",
+                        txt_color: black_color,
+                        txt_size: 14,
+                        txt_weight: FontWeight.w500,
+                      ),
+                      width: _width * 0.20,
+                      decoration: BoxDecoration(),
+                    ),
+                    Container(
+                      width: _width * 0.5,
+                      decoration: BoxDecoration(),
+                      child:
+                          /**
+                                
+
+                                       Batsman 1 Score
+                                
+                                
+                                 */
+                          Row(
+                        children: [
+                          Container(
+                            width: _width * 0.5,
+                            height: 18,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: _bowlerScoreList.length,
+                              itemBuilder: (context, index) {
+                                return _bowlerScoreList[index];
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ))
           ],
         ));
   }
@@ -411,17 +458,17 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
                 Raised_Button(
                   text: "5",
                   width: _width * 0.175,
-                  onPressed: () => _addRun("5"),
+                  onPressed: () => _addRun("5", facingBatsmanName),
                 ),
                 Raised_Button(
                   text: "3",
                   width: _width * 0.175,
-                  onPressed: () => _addRun("3"),
+                  onPressed: () => _addRun("3", facingBatsmanName),
                 ),
                 Raised_Button(
                   text: "1",
                   width: _width * 0.175,
-                  onPressed: () => _addRun("1"),
+                  onPressed: () => _addRun("1", facingBatsmanName),
                 ),
               ],
             ),
@@ -435,18 +482,17 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
                 Raised_Button(
                   text: "6",
                   width: _width * 0.175,
-                  onPressed: () => _addRun("6"),
+                  onPressed: () => _addRun("6", facingBatsmanName),
                 ),
                 Raised_Button(
                   text: "4",
                   width: _width * 0.175,
-                  onPressed: () => _addRun("4"),
+                  onPressed: () => _addRun("4", facingBatsmanName),
                 ),
                 Raised_Button(
-                  text: "2",
-                  width: _width * 0.175,
-                  onPressed: () => _addRun("2"),
-                ),
+                    text: "2",
+                    width: _width * 0.175,
+                    onPressed: () => _addRun("2", facingBatsmanName)),
               ],
             )
           ],
@@ -470,7 +516,7 @@ class _Dashboard_PageState extends State<Dashboard_Page> {
                   ),
                   Create_Text(
                     text: _currentScore,
-                    txt_color: Colors.black.withOpacity(0.8),
+                    txt_color: Colors.black.withOpacity(0.4),
                     txt_size: 15,
                     txt_weight: FontWeight.w500,
                   )

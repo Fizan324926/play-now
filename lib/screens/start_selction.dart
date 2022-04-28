@@ -212,7 +212,6 @@ class _SelectionState extends State<Selection> {
                               fontSize: 20, fontWeight: FontWeight.w700),
                         ),
                         onPressed: () {
-                          debugPrint(validate(context).toString());
                           if (validate(context)) {
                             Navigator.push(
                                 context,

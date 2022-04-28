@@ -7,7 +7,6 @@ import 'package:cric_scoring/screens/splash_screen.dart';
 import 'package:cric_scoring/screens/start_selction.dart';
 import 'package:cric_scoring/testing.dart';
 import 'package:flutter/material.dart';
-
 import 'SQL_Assignment/note_list.dart';
 
 void main() {
